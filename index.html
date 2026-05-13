@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Detektivbüro Nordlicht</title>
+<style>
+:root{--bg:#0f172a;--card:#111827;--line:#334155;--text:#f8fafc;--muted:#cbd5e1;--yellow:#facc15;--blue:#38bdf8;--red:#fb7185;--green:#22c55e}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#020617,#0f172a 50%,#172554);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh}.wrap{max-width:920px;margin:0 auto;padding:14px}.card{background:rgba(17,24,39,.96);border:1px solid rgba(148,163,184,.35);border-radius:22px;padding:20px;box-shadow:0 18px 50px rgba(0,0,0,.35);margin:12px 0}.hidden{display:none!important}h1{font-size:2rem;margin:.2rem 0 .5rem}h2{font-size:1.45rem;margin:.2rem 0 .5rem}h3{color:var(--yellow);margin:.8rem 0 .4rem}p,li{color:var(--muted);line-height:1.55;font-size:1.02rem}.center{text-align:center}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}input,textarea,button{font:inherit}input,textarea{width:100%;border:1px solid #475569;border-radius:14px;background:#020617;color:white;padding:14px;margin:6px 0}button{border:0;border-radius:14px;padding:13px 16px;margin:6px 4px;font-weight:800;background:var(--yellow);color:#111827;cursor:pointer;touch-action:manipulation}button.secondary{background:#334155;color:white;border:1px solid #64748b}.topbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}.stat{background:#020617;border:1px solid var(--line);border-radius:14px;padding:9px 12px;font-weight:800}.progress{height:12px;background:#020617;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:12px 0}.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--yellow))}.story{background:#020617;border:1px solid var(--line);border-radius:18px;padding:14px;margin:12px 0}.paper{background:#f8fafc;color:#111827;border-radius:16px;padding:15px;margin:12px 0}.paper p,.paper li{color:#111827}.paper h3{color:#111827}.clue{border-left:5px solid var(--blue);background:#0b1220;border-radius:12px;padding:12px;margin:10px 0;color:#e2e8f0}.answerRow{display:flex;gap:8px;align-items:center}.answerRow input{flex:1}.msg{min-height:38px;font-weight:800}.ok{color:var(--green)}.bad{color:var(--red)}.hint{border:1px dashed var(--yellow);background:rgba(250,204,21,.08);border-radius:14px;padding:12px;margin:10px 0;color:#fef9c3}.badge{display:inline-block;background:#172554;border:1px solid #3b82f6;color:#dbeafe;border-radius:999px;padding:7px 10px;margin:4px}.note{min-height:90px}.small{font-size:.9rem;color:#94a3b8}.tag{font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:var(--yellow);font-weight:900}.names{color:#bfdbfe;font-weight:700}.suspects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.suspect{border:1px solid #475569;border-radius:16px;padding:12px;background:#020617}.suspect b{color:#fff}
+@media(max-width:650px){.grid,.suspects{grid-template-columns:1fr}.answerRow{display:block}.card{padding:16px}h1{font-size:1.65rem}.topbar{display:block}.stat{text-align:center;margin:6px 0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="screenStart" class="card">
+    <div class="center">
+      <div style="font-size:2.5rem">🔎🕵️‍♀️📁</div>
+      <h1>Detektivbüro Nordlicht</h1>
+      <p><b>Fall 1:</b> Die verschwundene Projektakte</p>
+      <p>Für 1 bis 4 Detektivinnen und Detektive. Humorvoll, spannend und ab der Mitte mit genauer Detektivarbeit.</p>
+    </div>
+    <div class="grid">
+      <input class="nameInput" placeholder="Detektiv 1" autocomplete="off">
+      <input class="nameInput" placeholder="Detektiv 2" autocomplete="off">
+      <input class="nameInput" placeholder="Detektiv 3" autocomplete="off">
+      <input class="nameInput" placeholder="Detektiv 4" autocomplete="off">
+    </div>
+    <p class="small">Mindestens ein Name reicht. Falls kein Name eingetragen wird, startet das Spiel als „Detektivteam“.</p>
+    <div class="center"><button id="btnStart" type="button">▶ Fall starten</button></div>
+    <p id="startInfo" class="small center"></p>
+  </section>
+
+  <section id="screenGame" class="hidden">
+    <div class="topbar"><div class="stat">⏱ <span id="time">00:00</span></div><div class="stat">⭐ <span id="score">100</span> Punkte</div><div class="stat">💡 <span id="hintCount">0</span> Tipps</div></div>
+    <div class="progress"><div id="bar"></div></div>
+    <div class="card">
+      <div id="chapterTag" class="tag"></div>
+      <h2 id="title"></h2>
+      <div id="namesLine" class="names"></div>
+      <div id="content"></div>
+      <div class="answerRow"><input id="answer" placeholder="Lösung eingeben …" autocomplete="off"><button id="btnCheck" type="button">Prüfen</button></div>
+      <div id="msg" class="msg"></div>
+      <div id="hintArea"></div>
+      <button id="btnHint" class="secondary" type="button">💡 Hinweis anzeigen</button><button id="btnNotes" class="secondary" type="button">📝 Notizbuch</button><button id="btnRestart" class="secondary" type="button">Neu starten</button>
+      <div id="notesBox" class="hidden"><h3>Detektivnotizbuch</h3><p class="small">Notiert euch Zeiten, Verdächtige, Codes und Widersprüche.</p><textarea id="notes" class="note" placeholder="Unsere Hinweise …"></textarea></div>
+    </div>
+  </section>
+
+  <section id="screenEnd" class="card hidden center"></section>
+</div>
+<script>
+(function(){
+'use strict';
+var chapters=[
+{t:'Das verschlossene Büro',a:['48'],h:['Die Zahlen werden immer größer, aber nicht einfach um denselben Betrag.','Jede Zahl entsteht aus der vorherigen.','Die Zahlen werden verdoppelt: 24 × 2 = 48.'],s:'Die Tür klickt. Irgendwo macht ein Kopierer ein Geräusch, obwohl ihn niemand eingeschaltet hat. Unheimlich. Oder einfach nur Schule.',html:'<div class="story"><p>Es ist kurz nach Schulschluss. Der Flur ist fast leer. Nur ein Putzwagen quietscht irgendwo in der Ferne so dramatisch, als hätte er eine eigene Titelmusik.</p><p>{TEAM} steht vor dem Büro der Projektleitung. An der Tür hängt ein Zettel:</p></div><div class="paper"><h3>Tür-Code</h3><p style="font-size:1.5rem;text-align:center"><b>3 – 6 – 12 – 24 – ?</b></p></div><p>Welche Zahl öffnet die Tür?</p>'},
+{t:'Die Zahlenbotschaft',a:['SCHULE'],h:['Jede Zahl steht für einen Buchstaben im Alphabet.','19 = S, 3 = C, 8 = H …','Die Botschaft lautet SCHULE.'],s:'Richtig. Auf der Rückseite steht klein: „Der erste Hinweis liegt dort, wo man leise sein sollte, es aber nie ganz ist.“',html:'<div class="story"><p>Im Büro liegt ein zerknitterter Zettel. Daneben klebt ein Haftzettel: „A = 1. Bitte nicht wieder den Hausmeister fragen.“</p></div><div class="paper"><p style="font-size:1.45rem;text-align:center"><b>19 – 3 – 8 – 21 – 12 – 5</b></p><p><b>A = 1, B = 2, C = 3 …</b></p></div><p>Welches Wort ist verschlüsselt?</p>'},
+{t:'Vier Verdächtige und ein schlechter Kaffee',a:['HERR STEIN','STEIN'],h:['Schließe Personen aus, die laut Hinweis nicht passen.','Frau Weber trägt eine Brille. Zoe hatte keinen Schlüssel. Lukas war in der Sporthalle.','Übrig bleibt Herr Stein.'],s:'Herr Stein also. Verdächtig. Oder einfach nur jemand, der zu viele Konferenzen hatte.',html:'<div class="story"><p>Im Lehrerzimmer duftet es nach Kaffee. Leider nach dem Kaffee, der schon seit der zweiten Stunde auf der Warmhalteplatte überlebt.</p></div><div class="suspects"><div class="suspect"><b>Frau Weber</b><br>trägt eine Brille und leitet die Projektgruppe.</div><div class="suspect"><b>Herr Stein</b><br>hat einen Generalschlüssel und wirkt ungewöhnlich nervös.</div><div class="suspect"><b>Lukas</b><br>war angeblich in der Sporthalle.</div><div class="suspect"><b>Zoe</b><br>hatte laut eigener Aussage keinen Schlüssel.</div></div><div class="clue">Hinweise:<br>1. Die gesuchte Person trägt keine Brille.<br>2. Lukas war in der Sporthalle.<br>3. Zoe hatte keinen Schlüssel.<br>4. Frau Weber trägt eine Brille.</div><p>Wer bleibt als wichtigste Spur übrig?</p>'},
+{t:'Die Aussagen der Zeugen',a:['LUKAS'],h:['Suche einen Widerspruch zwischen zwei Aussagen.','Wenn die Sporthalle abgeschlossen war, konnte dort nicht einfach jemand mit Herrn Stein gewesen sein.','Lukas sagt vermutlich nicht die Wahrheit.'],s:'Sehr gut kombiniert. Lukas wird rot und murmelt: „Okay, vielleicht war ich eher in der Nähe der Sporthalle … also beim Snackautomaten.“',html:'<div class="story"><p>Jetzt wird es ernster. Drei Aussagen liegen auf dem Tisch. Eine davon passt nicht zu den anderen.</p></div><div class="paper"><h3>Aussage Frau Weber</h3><p>„Ich habe Herrn Stein gegen 13:15 Uhr aus dem Archiv kommen sehen. Er hatte einen blauen Ordner dabei.“</p><h3>Aussage Lukas</h3><p>„Das kann nicht stimmen. Um 13:15 Uhr war Herr Stein mit mir in der Sporthalle.“</p><h3>Aussage Hausmeister Berger</h3><p>„Die Sporthalle war zwischen 13:00 und 13:30 abgeschlossen.“</p></div><p>Wer sagt vermutlich nicht die Wahrheit?</p>'},
+{t:'Der Kaffeefleck-Stundenplan',a:['HERR STEIN','STEIN'],h:['Gesucht ist die Person mit Zugang zur Akte in der 2. Stunde.','Bei Herr Stein steht in der 2. Stunde „Büro“.','Herr Stein hatte in der entscheidenden Stunde am ehesten Zugang.'],s:'Der Stundenplan ergibt Sinn. Leider macht der Kaffeefleck immer noch den Eindruck, euch anzustarren.',html:'<div class="story"><p>Ein Stundenplan ist teilweise von Kaffee bedeckt. Der Kaffee riecht, als hätte er selbst schon einen Abschluss gemacht.</p></div><div class="paper"><table style="width:100%;border-collapse:collapse;color:#111827"><tr><th style="border:1px solid #94a3b8;padding:6px">Person</th><th style="border:1px solid #94a3b8;padding:6px">1. Stunde</th><th style="border:1px solid #94a3b8;padding:6px">2. Stunde</th><th style="border:1px solid #94a3b8;padding:6px">3. Stunde</th></tr><tr><td style="border:1px solid #94a3b8;padding:6px">Zoe</td><td style="border:1px solid #94a3b8;padding:6px">Kunst</td><td style="border:1px solid #94a3b8;padding:6px">???</td><td style="border:1px solid #94a3b8;padding:6px">Englisch</td></tr><tr><td style="border:1px solid #94a3b8;padding:6px">Lukas</td><td style="border:1px solid #94a3b8;padding:6px">Sport</td><td style="border:1px solid #94a3b8;padding:6px">Mathe</td><td style="border:1px solid #94a3b8;padding:6px">???</td></tr><tr><td style="border:1px solid #94a3b8;padding:6px">Herr Stein</td><td style="border:1px solid #94a3b8;padding:6px">???</td><td style="border:1px solid #94a3b8;padding:6px">Büro</td><td style="border:1px solid #94a3b8;padding:6px">Konferenz</td></tr></table><p><b>Die Akte verschwand in der 2. Stunde.</b></p><ul><li>Zoe war nicht im Büro.</li><li>Lukas hatte in der 3. Stunde Sport.</li><li>Herr Stein hatte in der 1. Stunde Aufsicht.</li></ul></div><p>Wer hatte in der entscheidenden 2. Stunde am ehesten Zugang zur Akte?</p>'},
+{t:'Der manipulierte Bericht',a:['13:20','1320','13.20','13 20'],h:['Vergleiche den Bericht mit der Kameranotiz.','Wenn Herr Stein um 13:05 Uhr vor dem Archiv war, kann er nicht erst um 13:20 Uhr losgegangen sein.','Falsch ist 13:20 Uhr.'],s:'Sehr genau gelesen. Die Uhrzeit war manipuliert. Das ist jetzt kein Zufall mehr – außer in sehr schlechten Krimis.',html:'<div class="story"><p>{TEAM} findet einen Bericht auf dem Kopierer. Oben steht: „Nicht lesen!“ – also natürlich wird er gelesen. Detektivregel Nummer 7.</p></div><div class="paper"><h3>Bericht</h3><p>„Die Projektakte wurde zuletzt um 12:45 Uhr gesehen. Alle Lehrkräfte befanden sich zu diesem Zeitpunkt im Lehrerzimmer. Herr Stein verließ das Lehrerzimmer erst um 13:20 Uhr.“</p><p><b>Handschriftlicher Zusatz:</b> „Das stimmt nicht.“</p><hr><p><b>Kameranotiz:</b> Die Flurkamera zeigt Herrn Stein um 13:05 Uhr vor dem Archiv.</p></div><p>Welche Uhrzeit im Bericht ist offenbar falsch? Gib nur die Uhrzeit ein.</p>'},
+{t:'Der Satz mit dem versteckten Ort',a:['BIBLIOTHEK','MEDIOTHEK'],h:['Es geht um Wissen und Geschichten.','Wo findet man Bücher, Geschichten und ruhige Arbeitsplätze?','Gemeint ist die Bibliothek bzw. Mediothek.'],s:'In der Bibliothek/Mediothek liegt tatsächlich ein kleiner Schlüssel. An ihm hängt ein Schild: „Nicht für den Süßigkeitenschrank.“ Schade.',html:'<div class="story"><p>Auf der Rückseite des Berichts steht ein rätselhafter Satz. {LAST} liest ihn zweimal, weil er beim ersten Mal klingt wie ein Deutschtest mit Nebelmaschine.</p></div><div class="paper"><p style="font-size:1.2rem"><b>„Der Schlüssel liegt dort, wo Wissen schweigt und Geschichten schlafen.“</b></p></div><p>Welcher Raum ist gemeint?</p><div class="clue">Mögliche Orte im Gebäude: Mensa, Büro, Sporthalle, Bibliothek, Musikraum</div>'},
+{t:'Die Schließfach-Logik',a:['C'],h:['Achte auf das Wort „beide“. Es verknüpft die zwei Bedingungen.','Das richtige Fach ist größer als A und kleiner als D. Damit bleiben B oder C. Es ist nicht gerade.','Das gesuchte Fach ist C.'],s:'Das Schließfach C öffnet sich. Darin liegt aber nicht die Akte, sondern ein weiterer Umschlag. Natürlich. Kein Detektivfall ohne Umschläge.',html:'<div class="story"><p>Der Schlüssel passt zu drei Schließfächern. Auf einem Zettel steht ein Hinweis. Diesmal ist es kein Rechnen, sondern genaues Lesen.</p></div><div class="paper"><h3>Schließfächer</h3><p><b>A</b> – links<br><b>B</b> – Mitte<br><b>C</b> – rechts</p><p>„Das richtige Fach erfüllt beide Bedingungen:</p><ol><li>Es kommt im Alphabet nach A.</li><li>Es ist kein gerader Buchstabenplatz.</li></ol><p>A=1, B=2, C=3.“</p></div><p>Welches Fach ist richtig? Gib A, B oder C ein.</p>'},
+{t:'Der finale Code',a:['4603'],h:['Tür-Code-Lösung war 48. Die erste Ziffer ist 4.','Das Schulwort war SCHULE. Es hat 6 Buchstaben.','Falsche Uhrzeit: 13:20, letzte Ziffer 0. Schließfach C = 3. Code: 4603.'],s:'Der Koffer springt auf. Die Projektakte ist da – zusammen mit einem Keks, der vermutlich seit 2021 Beweismittel ist.',html:'<div class="story"><p>Im Umschlag liegt ein letzter Hinweis. Die Projektakte befindet sich in einem kleinen Archivkoffer. Der Koffer braucht einen vierstelligen Code.</p></div><div class="paper"><h3>Finaler Hinweis</h3><p>Der Code besteht aus vier Zeichen:</p><ol><li>Die erste Ziffer der Tür-Code-Lösung.</li><li>Die Anzahl der Buchstaben des entschlüsselten Wortes.</li><li>Die letzte Ziffer der falschen Uhrzeit.</li><li>Der Buchstabe des richtigen Schließfachs als Zahl: A=1, B=2, C=3.</li></ol></div><p>Gebt den finalen Code ein.</p>'}
+];
+var names=['Detektivteam'], chapter=0, score=100, hints=0, hintIndex=0, attempts=0, startMs=0, timerId=null;
+function id(x){return document.getElementById(x)}
+function norm(s){return String(s||'').trim().toUpperCase().replace(/Ä/g,'AE').replace(/Ö/g,'OE').replace(/Ü/g,'UE').replace(/ß/g,'SS')}
+function team(){if(names.length===1)return names[0]; if(names.length===2)return names[0]+' und '+names[1]; return names.slice(0,-1).join(', ')+' und '+names[names.length-1]}
+function fill(s){return s.replace(/\{TEAM\}/g,team()).replace(/\{LAST\}/g,names[names.length-1]||'jemand')}
+function updateTime(){var sec=Math.floor((Date.now()-startMs)/1000); var m=Math.floor(sec/60); var s=sec%60; id('time').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function updateStats(){id('score').textContent=Math.max(0,score); id('hintCount').textContent=hints; id('bar').style.width=(chapter/chapters.length*100)+'%'}
+function startGame(){
+ try{
+  var vals=[].slice.call(document.querySelectorAll('.nameInput')).map(function(i){return i.value.trim()}).filter(Boolean).slice(0,4);
+  names=vals.length?vals:['Detektivteam'];
+  id('screenStart').classList.add('hidden'); id('screenGame').classList.remove('hidden');
+  startMs=Date.now(); if(timerId)clearInterval(timerId); timerId=setInterval(updateTime,1000); updateTime(); render();
+ }catch(e){id('startInfo').textContent='Startfehler: '+e.message;}
+}
+function render(){
+ var c=chapters[chapter]; hintIndex=0; attempts=0; id('chapterTag').textContent='Kapitel '+(chapter+1)+' von '+chapters.length; id('title').textContent=c.t; id('namesLine').textContent='Ermittelnde: '+team(); id('content').innerHTML=fill(c.html); id('answer').value=''; id('msg').textContent=''; id('msg').className='msg'; id('hintArea').innerHTML=''; updateStats(); setTimeout(function(){try{id('answer').focus()}catch(e){}},100);
+}
+function check(){
+ var c=chapters[chapter]; var a=norm(id('answer').value); var ok=c.a.some(function(x){return norm(x)===a});
+ if(ok){id('msg').className='msg ok'; id('msg').textContent=c.s; setTimeout(function(){chapter++; if(chapter>=chapters.length)end(); else render()},1100)}
+ else{attempts++; if(attempts>=3){score-=3; updateStats(); id('msg').className='msg bad'; id('msg').textContent='Noch nicht. Kleiner Detektivabzug: -3 Punkte. Lest die Hinweise ganz genau.'}else{id('msg').className='msg bad'; var m=['Nicht ganz. Herr Berger hebt skeptisch eine Augenbraue.','Fast detektivisch – aber noch nicht fallreif.','Die Spur quietscht, aber sie führt noch nicht zum Ziel.']; id('msg').textContent=m[Math.floor(Math.random()*m.length)]}}
+}
+function hint(){var c=chapters[chapter]; if(hintIndex>=c.h.length){id('hintArea').insertAdjacentHTML('beforeend','<div class="hint">Mehr Hinweise gibt es hier nicht. Jetzt seid ihr dran.</div>');return} var cost=[5,10,15][hintIndex]||15; score-=cost; hints++; id('hintArea').insertAdjacentHTML('beforeend','<div class="hint"><b>Hinweis '+(hintIndex+1)+' (-'+cost+' Punkte):</b><br>'+c.h[hintIndex]+'</div>'); hintIndex++; updateStats()}
+function end(){clearInterval(timerId); updateTime(); id('screenGame').classList.add('hidden'); id('screenEnd').classList.remove('hidden'); var t=id('time').textContent; var mins=parseInt(t.split(':')[0],10)||0; var rank='Clevere Ermittlerinnen und Ermittler'; if(score>=90&&mins<20)rank='Meisterdetektivteam'; else if(score>=75)rank='Profi-Spürnasen'; else if(score>=55)rank='Hartnäckige Fallknacker'; else rank='Mutige Nachwuchsdetektive'; id('screenEnd').innerHTML='<div style="font-size:2.5rem">🎉📁🔎</div><h1>Fall gelöst!</h1><p>'+team()+' haben die verschwundene Projektakte gefunden.</p><p>Der Koffer öffnet sich, die Akte ist vollständig, und irgendwo im Gebäude atmet ein völlig unschuldiger Kopierer erleichtert auf.</p><div><span class="badge">⏱ Zeit: '+t+'</span><span class="badge">⭐ Punkte: '+Math.max(0,score)+'</span><span class="badge">💡 Tipps: '+hints+'</span></div><h2>Rang: '+rank+'</h2><button id="again" type="button">Neuen Fall starten</button>'; id('again').addEventListener('click',function(){location.reload()})}
+function setup(){
+ id('btnStart').addEventListener('click',startGame,false); id('btnCheck').addEventListener('click',check,false); id('btnHint').addEventListener('click',hint,false); id('btnNotes').addEventListener('click',function(){id('notesBox').classList.toggle('hidden')},false); id('btnRestart').addEventListener('click',function(){if(confirm('Fall wirklich neu starten?'))location.reload()},false); id('answer').addEventListener('keydown',function(e){if(e.key==='Enter')check()},false); id('startInfo').textContent='Bereit. Wenn der Button nicht reagiert: Datei in Safari öffnen, nicht nur in der Vorschau.';
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup); else setup();
+})();
+</script>
+</body>
+</html>
